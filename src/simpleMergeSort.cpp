@@ -4,7 +4,7 @@
  */
 
 #include "simpleMergeSort.hpp"
-
+#include "stdlib.h"
 /**
  * @brief Constructor for MergeSort
  * @param nums Pointer to the vector to be sorted
