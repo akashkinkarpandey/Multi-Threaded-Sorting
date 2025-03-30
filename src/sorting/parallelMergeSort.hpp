@@ -11,7 +11,6 @@
 
 #include <vector>
 #include <thread>
-#include <mutex>
 #include <iostream>
 
 /**
@@ -26,8 +25,6 @@ class ParallelMergeSort
 {
 private:
     std::vector<int> *arrayToSort; /**< Pointer to the vector to be sorted */
-    std::mutex mergeMutex; /**< Mutex to protect shared access during merging operations */
-
 public:
     /**
      * @brief Constructor for ParallelMergeSort
