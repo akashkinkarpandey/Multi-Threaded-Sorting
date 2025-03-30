@@ -38,10 +38,10 @@ public:
     
     /**
      * @brief Performs recursive merge sort on a subarray
-     * @param left The starting index of the subarray
-     * @param right The ending index of the subarray
+     * @param startIndex The starting index of the subarray
+     * @param endIndex The ending index of the subarray
      */
-    void recursiveSort(int left, int right);
+    void recursiveSort(int startIndex, int endIndex);
 };
 
 #endif
