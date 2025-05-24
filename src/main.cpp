@@ -1,9 +1,9 @@
 /**
  * @file main.cpp
- * @brief Performance comparison between standard and parallel merge sort algorithms
+ * @brief Performance comparison between standard, parallel merge sort, and quick sort algorithms
  * 
  * This program compares the execution time of a standard sequential merge sort
- * algorithm against a parallel implementation. It generates a large array of
+ * algorithm, a parallel implementation, and a quick sort algorithm. It generates a large array of
  * random integers, creates identical copies, and measures the time each
  * algorithm takes to sort the data.
  */
@@ -13,6 +13,7 @@
 #include <chrono> 
 #include "sorting/simpleMergeSort.hpp"
 #include "sorting/parallelMergeSort.hpp"
+#include "sorting/quickSort.hpp" // Added include for QuickSort
 
 /**
  * @brief Main program entry point
@@ -26,15 +27,17 @@ int main(int argc, char *argv[])
     const int ARRAY_SIZE = 10000000;       // Size of the test arrays
     const int MAX_RANDOM_VALUE = 10000000; // Maximum random value generated
     
-    // Create two identical arrays of random integers
+    // Create three identical arrays of random integers
     std::vector<int> standardSortArray(ARRAY_SIZE);
     std::vector<int> parallelSortArray(ARRAY_SIZE);
+    std::vector<int> quickSortArray(ARRAY_SIZE); // Added array for QuickSort
     
     // Fill arrays with the same random values
     for (int i = 0; i < ARRAY_SIZE; ++i)
     {
         standardSortArray[i] = rand() % MAX_RANDOM_VALUE;
         parallelSortArray[i] = standardSortArray[i];
+        quickSortArray[i] = standardSortArray[i]; // Populate quickSortArray
     }
 
     // Measure standard merge sort performance
@@ -62,6 +65,19 @@ int main(int argc, char *argv[])
 
     // Free memory allocated for parallel sorter
     delete parallelSorter;
+
+    // Measure quick sort performance
+    QuickSort *quickSorter = new QuickSort(&quickSortArray); // Create QuickSort object
+    auto quickSortStart = std::chrono::high_resolution_clock::now();  // Start timer
+    quickSorter->sort();                                              // Execute sort
+    auto quickSortEnd = std::chrono::high_resolution_clock::now();    // Stop timer
+    std::chrono::duration<double> quickSortDuration = quickSortEnd - quickSortStart; // Calculate duration
+
+    // Output quick sort performance results
+    std::cout << "QuickSort time: " << quickSortDuration.count() << " seconds" << std::endl; // Print duration
+
+    // Free memory allocated for quick sorter
+    delete quickSorter; // Delete QuickSort object
 
     return 0;
 }
