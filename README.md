@@ -7,8 +7,8 @@ A high-performance implementation of the classic Merge Sort algorithm in C++, en
 
 ## 📦 Features
 
-- 🔁 **Parallel Merge Sort** using `std::thread`
-- ⚡ **Improved performance** on large datasets (scales with CPU cores)
+- 🔁 Parallel Merge Sort using `std::thread`
+- ⚡ Improved performance on large datasets (scales with CPU cores)
 - 🧠 Clean object-oriented design with modular code
 - 🧪 Includes both single-threaded and multi-threaded implementations for comparison
 
