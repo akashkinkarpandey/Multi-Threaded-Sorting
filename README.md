@@ -18,21 +18,18 @@ A high-performance implementation of the classic Merge Sort algorithm in C++, en
 
 Clone the repository and build the project using `g++`:
 
-```bash
-git clone https://github.com/akashkinkarpandey/MultiThreaded-Merge-Sort.git 
-cd MultiThreaded-Merge-Sort
-
-g++ -o multithreadedsortcomparison \
+Run the commands-
+1. git clone https://github.com/akashkinkarpandey/MultiThreaded-Merge-Sort.git 
+2. cd MultiThreaded-Merge-Sort
+3. g++ -o multithreadedsortcomparison \
     src/main.cpp \
     src/sorting/parallelMergeSort.cpp \
     src/sorting/simpleMergeSort.cpp \
     -I. -pthread
-
-./multithreadedsortcomparison.exe
+4. ./multithreadedsortcomparison.exe
 ````
-
-> 🧠 Ensure you have `g++` with C++11 (or later) and `pthread` support.
-
+PS:-
+🧠 Ensure you have `g++` with C++11 (or later) and `pthread` support.
 ---
 
 ## 📂 Project Structure
