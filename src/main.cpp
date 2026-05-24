@@ -1,67 +1,103 @@
-/**
- * @file main.cpp
- * @brief Performance comparison between standard and parallel merge sort algorithms
- * 
- * This program compares the execution time of a standard sequential merge sort
- * algorithm against a parallel implementation. It generates a large array of
- * random integers, creates identical copies, and measures the time each
- * algorithm takes to sort the data.
- */
-
 #include <iostream>
 #include <vector>
-#include <chrono> 
+#include <chrono>
+#include <algorithm>
+#include <thread>
+#include <random>
+
 #include "sorting/simpleMergeSort.hpp"
 #include "sorting/parallelMergeSort.hpp"
 
-/**
- * @brief Main program entry point
- * @param argc Number of command line arguments
- * @param argv Array of command line arguments
- * @return 0 on successful execution
- */
-int main(int argc, char *argv[])
+int main()
 {
-    // Configuration constants
-    const int ARRAY_SIZE = 10000000;       // Size of the test arrays
-    const int MAX_RANDOM_VALUE = 10000000; // Maximum random value generated
-    
-    // Create two identical arrays of random integers
+    const int ARRAY_SIZE = 10000000;
+    const int MAX_RANDOM_VALUE = 19999999;
+
+    std::random_device rd;
+    std::mt19937 generator(rd());
+
+    std::uniform_int_distribution<int> distribution(0, MAX_RANDOM_VALUE);
+
     std::vector<int> standardSortArray(ARRAY_SIZE);
     std::vector<int> parallelSortArray(ARRAY_SIZE);
-    
-    // Fill arrays with the same random values
+
     for (int i = 0; i < ARRAY_SIZE; ++i)
     {
-        standardSortArray[i] = rand() % MAX_RANDOM_VALUE;
+        standardSortArray[i] = distribution(generator);
+
         parallelSortArray[i] = standardSortArray[i];
     }
 
-    // Measure standard merge sort performance
-    MergeSort *standardSorter = new MergeSort(&standardSortArray);
-    auto standardSortStart = std::chrono::high_resolution_clock::now();  // Start timer
-    standardSorter->sort();                                              // Execute sort
-    auto standardSortEnd = std::chrono::high_resolution_clock::now();    // Stop timer
-    std::chrono::duration<double> standardSortDuration = standardSortEnd - standardSortStart;
+    std::cout << "\n========== SYSTEM INFO ==========\n";
 
-    // Output standard sort performance results
-    std::cout << "Standard MergeSort time: " << standardSortDuration.count() << " seconds" << std::endl;
+    std::cout<< "Hardware Threads Available: "<< std::thread::hardware_concurrency()
+        << "\n";
 
-    // Free memory allocated for standard sorter
-    delete standardSorter;
+    std::cout<< "Array Size: " << ARRAY_SIZE << "\n";
 
-    // Measure parallel merge sort performance
-    ParallelMergeSort *parallelSorter = new ParallelMergeSort(&parallelSortArray);
-    auto parallelSortStart = std::chrono::high_resolution_clock::now();  // Start timer
-    parallelSorter->sort();                                              // Execute sort
-    auto parallelSortEnd = std::chrono::high_resolution_clock::now();    // Stop timer
-    std::chrono::duration<double> parallelSortDuration = parallelSortEnd - parallelSortStart;
+    std::cout << "\n========== STANDARD MERGE SORT ==========\n";
 
-    // Output parallel sort performance results
-    std::cout << "Parallel MergeSort time: " << parallelSortDuration.count() << " seconds" << std::endl;
+    MergeSort standardSorter(standardSortArray);
 
-    // Free memory allocated for parallel sorter
-    delete parallelSorter;
+    auto standardStart =
+        std::chrono::high_resolution_clock::now();
+
+    standardSorter.sort();
+
+    auto standardEnd =
+        std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> standardDuration =
+        standardEnd - standardStart;
+
+    bool standardCorrect =
+        std::is_sorted(
+            standardSortArray.begin(),
+            standardSortArray.end());
+
+    std::cout
+        << "Execution Time: "
+        << standardDuration.count()
+        << " seconds\n";
+
+    std::cout
+        << "Sorted Correctly: "
+        << (standardCorrect ? "YES" : "NO")
+        << "\n";
+
+    std::cout << "\n========== PARALLEL MERGE SORT ==========\n";
+
+    ParallelMergeSort parallelSorter(parallelSortArray);
+
+    auto parallelStart = std::chrono::high_resolution_clock::now();
+
+    parallelSorter.sort();
+
+    auto parallelEnd = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> parallelDuration =
+        parallelEnd - parallelStart;
+
+    bool parallelCorrect =
+        std::is_sorted(
+            parallelSortArray.begin(),
+            parallelSortArray.end());
+
+    std::cout
+        << "Execution Time: "
+        << parallelDuration.count()
+        << " seconds\n";
+
+    std::cout
+        << "Sorted Correctly: "
+        << (parallelCorrect ? "YES" : "NO")
+        << "\n";
+
+    double speedup =standardDuration.count() / parallelDuration.count();
+
+    std::cout << "\n========== PERFORMANCE METRICS ==========\n";
+
+    std::cout<< "Speedup Ratio: " << speedup << "x\n";
 
     return 0;
 }
