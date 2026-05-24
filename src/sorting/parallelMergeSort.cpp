@@ -124,11 +124,14 @@ void ParallelMergeSort::sort()
     {
         exit(1);  // Exit with error code
     }
-
-    // Create a thread to perform the sorting
+    /*
+    Create a thread to perform the sorting
     std::thread mainSortThread([this]
                          { this->recursiveSort(0, arrayToSort->size() - 1); });
-    
-    // Wait for the sorting thread to complete
+
+    Wait for the sorting thread to complete
     mainSortThread.join();
+    */
+   //Above creates an extra thread unnecessarily,below is clean and simple
+    recursiveSort(0, (*arrayToSort).size() - 1);
 }
