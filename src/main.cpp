@@ -20,12 +20,14 @@ int main()
 
     std::vector<int> standardSortArray(ARRAY_SIZE);
     std::vector<int> parallelSortArray(ARRAY_SIZE);
-
+    std::vector<int> stlSortArray(ARRAY_SIZE);
     for (int i = 0; i < ARRAY_SIZE; ++i)
     {
         standardSortArray[i] = distribution(generator);
 
         parallelSortArray[i] = standardSortArray[i];
+
+        stlSortArray[i] = standardSortArray[i];
     }
 
     std::cout << "\n========== SYSTEM INFO ==========\n";
@@ -93,11 +95,33 @@ int main()
         << (parallelCorrect ? "YES" : "NO")
         << "\n";
 
-    double speedup =standardDuration.count() / parallelDuration.count();
+    std::cout << "\n========== STL SORT ==========\n";
 
-    std::cout << "\n========== PERFORMANCE METRICS ==========\n";
+    auto stlStart = std::chrono::high_resolution_clock::now();
 
-    std::cout<< "Speedup Ratio: " << speedup << "x\n";
+    std::sort(stlSortArray.begin(),stlSortArray.end());
+
+    auto stlEnd = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> stlDuration = stlEnd - stlStart;
+
+    bool stlCorrect =std::is_sorted(stlSortArray.begin(),stlSortArray.end());
+
+    std::cout<< "Execution Time: "<< stlDuration.count()<< " seconds\n";
+
+    std::cout<< "Sorted Correctly: "<< (stlCorrect ? "YES" : "NO") << "\n";
+
+    std::cout << "\n========== COMPARISON ==========\n";
+
+    std::cout
+        << "Parallel vs Sequential Speedup: "
+        << standardDuration.count() / parallelDuration.count()
+        << "x\n";
+
+    std::cout
+        << "Parallel vs STL Speedup: "
+        << stlDuration.count() / parallelDuration.count()
+        << "x\n";
 
     return 0;
 }
